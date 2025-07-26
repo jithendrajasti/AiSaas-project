@@ -4,6 +4,8 @@ import axios from 'axios';
 import { AppContext } from '../../context/AppContext';
 import { useAuth } from '@clerk/clerk-react';
 import { toast } from 'react-toastify';
+import Markdown from 'react-markdown';
+import Loading from '../components/Loading';
 
 const WriteArticle = () => {
 
@@ -35,7 +37,7 @@ const WriteArticle = () => {
     try {
 
       setLoading(true);
-      const prompt = `Write an article about ${input} in ${selectedLength.text}`;
+      const prompt = `Write an article about ${input} in ${selectedLength.text} with headings highlighted.`;
       const { data } = await axios.post(backendUrl + '/ai/generate-article', { prompt, length:selectedLength.length }, {
         headers: {
           Authorization: `Bearer ${await getToken()}`
@@ -72,31 +74,37 @@ const WriteArticle = () => {
           }
         </div>
         <br />
-        <button disabled={loading} type='submit' className='mx-auto flex w-full justify-center items-center gap-3 bg-gradient-to-r from-[#6a6ce7] to-[#cd51fb] px-4 py-2 text-white rounded-lg text-xs sm:text-sm cursor-pointer'>
-          <Edit className='w-3 sm:w-4' />
+        <button disabled={loading} type='submit' className={`mx-auto flex w-full justify-center items-center gap-3 bg-gradient-to-r from-[#6a6ce7] to-[#cd51fb] px-4 py-2 text-white rounded-lg text-xs sm:text-sm cursor-pointer  ${loading && 'opacity-50'}`}>
+          {
+            loading?
+            <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin"></span>:<Edit className='w-3 sm:w-4' />
+          }
           Generate Article
         </button>
       </form>
       {/* right col */}
       <div className='w-full max-w-lg p-4 bg-white rounded-lg flex flex-col border border-gray-200 min-h-96 max-h-[600px]'>
-        <div className='flex items-center gap-3'> <Edit className='w-5 h-5 text-[#4A7AFF]' />
+        <div className='flex items-center gap-3'>
+           <Edit className='w-5 h-5 text-[#4A7AFF]' />
           <h1 className='text-xl font-semibold'>
             Generated article
           </h1>
         </div>
 
         {
-          !content ? (
+          !content ?(
             <div className='flex-1 flex justify-center items-center'>
               <div className='text-sm flex flex-col items-center gap-5 text-gray-400 px-4' >
                 <Edit className='w-9 h-9' />
                 <p className='max-w-md text-center'>Enter a topic and click "Generate article " to get started</p>
               </div>
             </div>
-          ) : (
+          ): (
              <div className='mt-3 h-full overflow-y-scroll text-sm text-slate-600'>
-                  <div>
-                    {content}
+                  <div className='reset-tw'>
+                    <Markdown>
+                      {content}
+                    </Markdown>
                   </div>
              </div>
           )

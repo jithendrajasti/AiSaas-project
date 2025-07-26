@@ -88,7 +88,7 @@ const generateBlogTitle = async (req, res) => {
                 },
             ],
             temperature:0.7,
-            max_tokens:100
+            max_tokens:250
         });
 
 
