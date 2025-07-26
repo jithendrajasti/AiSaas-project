@@ -1,15 +1,39 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Hash, Image, Sparkles } from 'lucide-react'
+import { toast } from 'react-toastify';
+import { useAuth } from '@clerk/clerk-react';
+import axios from 'axios';
+import { AppContext } from '../../context/AppContext';
 
 const GenerateImage = () => {
   const ImageStyle = ['Realistic','Ghibli style','Anime style','Cartoon style','Fantasy style','Realistic style','3D style','Portrait style'];
-    
+      const {backendUrl}=useContext(AppContext);
       const [selectedStyle, setSelectedStyle] = useState('Realistic');
       const [input, setInput] = useState('');
 
       const [publish,setPublish]=useState(false);
+      const [loading, setLoading] = useState(false);
+      const [image,setImage]=useState('');
+      const {getToken}=useAuth();
       const onSubmitHandler = async (e) => {
-        e.preventDefault;
+        e.preventDefault();
+        try {
+          setLoading(true);
+          const prompt=`Generate a ${selectedStyle} image of ${input}`;
+          const {data}=await axios.post(backendUrl+'/ai/generate-image',{prompt,publish},{
+            headers:{
+              Authorization:`Bearer ${await getToken()}`
+            }
+          });
+          if(data.success){
+            setImage(data.content);
+          }else{
+            toast.error(data.message);
+          }
+        } catch (error) {
+          toast.error(error.message);
+        }
+        setLoading(false);
       }
   return (
     <div className='h-full overflow-y-scroll p-6 flex items-start flex-wrap gap-4 text-slate-700'>
@@ -40,25 +64,34 @@ const GenerateImage = () => {
            </p>
         </div>
         <br />
-        <button type='submit' className='mx-auto flex items-center w-full justify-center gap-3 bg-gradient-to-r from-[#44c644] to-[#dad419] px-4 py-2 text-white rounded-lg text-xs sm:text-sm cursor-pointer'>
-          <Image className='w-3 sm:w-4' />
+        <button disabled={loading} type='submit' className={`mx-auto flex items-center w-full justify-center gap-3 bg-gradient-to-r from-[#44c644] to-[#dad419] px-4 py-2 text-white rounded-lg text-xs sm:text-sm cursor-pointer ${loading && 'opacity-50'}`}>
+          {
+            loading?
+            <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin"></span>:<Image className='w-3 sm:w-4' />
+          }
           Generate Image
         </button>
       </form>
       {/* right col */}
-      <div className='w-full max-w-lg p-4 bg-white rounded-lg flex flex-col border border-gray-200 min-h-96 max-h-[600px]'>
+      <div className='w-full max-w-lg p-4 bg-white rounded-lg flex flex-col border border-gray-200 min-h-96 max-h-[600px] gap-5'>
         <div className='flex items-center gap-3'> <Image className='w-5 h-5 text-[#31d731]' />
               <h1 className='text-xl font-semibold'>
                 Generated Image
               </h1>
         </div>
 
-        <div className='flex-1 flex justify-center items-center'>
+        {
+          !image?(<div className='flex-1 flex justify-center items-center'>
           <div className='text-sm flex flex-col items-center gap-5 text-gray-400 px-4' >
               <Image className='w-9 h-9' />
               <p className='max-w-md text-center'>Enter a description and click "Generate Image" to get started</p>
           </div>
-        </div>
+        </div>):(
+          <div>
+            <img className='rounded-lg' src={image} alt="" />
+          </div>
+        )
+        }
       </div>
     </div>
   )

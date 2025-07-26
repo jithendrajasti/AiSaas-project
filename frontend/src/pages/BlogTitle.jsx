@@ -59,7 +59,7 @@ const BlogTitle = () => {
           }
         </div>
         <br />
-        <button type='submit' className='mx-auto flex items-center w-full justify-center gap-3 bg-gradient-to-r from-[#cd69f5] to-[#429ce0] px-4 py-2 text-white rounded-lg text-xs sm:text-sm cursor-pointer'>
+        <button disabled={loading} type='submit' className={`mx-auto flex items-center w-full justify-center gap-3 bg-gradient-to-r from-[#cd69f5] to-[#429ce0] px-4 py-2 text-white rounded-lg text-xs sm:text-sm cursor-pointer ${loading && 'opacity-50'}`}>
           {
             loading?
             <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin"></span>:<Hash className='w-3 sm:w-4' />
