@@ -169,7 +169,7 @@ const generateImage = async (req, res) => {
 const removeBackground = async (req, res) => {
     try {
         const { userId } = req.auth();
-        const { image } = req.file;
+        const image = req.file;
         const plan = req.plan;
         if (plan !== 'premium') {
             //this means that user is not having premium subscription & already freelu used more than 10 times

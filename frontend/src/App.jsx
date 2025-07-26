@@ -17,14 +17,7 @@ import { useEffect } from 'react';
 import {Toaster} from 'react-hot-toast';
 
 const App = () => {
-  const {getToken}=useAuth();
-  const debug=async()=>{
-    const token=await getToken();
-    console.log(token);
-  }
-  useEffect(()=>{
-    debug();
-  },[])
+  
   return (
     <div>
     <Toaster />
