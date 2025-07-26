@@ -6,7 +6,7 @@ const dbConnect=async()=>{
         console.log('DataBase connected');
     })
     await mongoose.connect(process.env.MONGODB_URL+'/ai-saas',{
-        serverSelectionTimeoutMS:20000
+        serverSelectionTimeoutMS:30000
     });
 }
 
