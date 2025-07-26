@@ -48,7 +48,7 @@ const likeCreation=async(req,res)=>{
             message="creation liked";
         }
 
-        const formattedArray=`{${updatedLikes.json(',')}}`;
+        const formattedArray=`{${updatedLikes.join(',')}}`;
 
         creation.likes=updatedLikes;
         await creation.save();

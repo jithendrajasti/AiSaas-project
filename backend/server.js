@@ -13,7 +13,7 @@ const app=express();
 (async()=>{
    try {
     await dbConnect();
-    await cloudinaryConnect();
+    cloudinaryConnect();
    } catch (error) {
     console.log(error.message)
    }

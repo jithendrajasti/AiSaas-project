@@ -1,14 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import { dummyCreationData } from '../assets/assets';
 import { Gem, Sparkles } from 'lucide-react';
-import {Protect} from '@clerk/clerk-react';
+import {Protect, useAuth, useUser} from '@clerk/clerk-react';
 import CreationItem from '../components/CreationItem';
+import { useContext } from 'react';
+import { AppContext } from '../../context/AppContext';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import Loading from '../components/Loading';
 
 const DashBoard = () => {
    const [creations,setCreations]=useState([]);
-   
+   const [loading,setLoading]=useState(true);
+   const {backendUrl}=useContext(AppContext);
+   const {user}=useUser();
+   const {getToken}=useAuth();
+
    const getDashBoardData=async()=>{
-    setCreations(dummyCreationData);
+       try {
+        const {data}=await axios.get(backendUrl+'/user/get-creations',{headers:{
+          Authorization:`Bearer ${await getToken()}`
+        }});
+        if(data.success){
+          setCreations(data.creations);
+        }else{
+          toast.error(data.message);
+        }
+       } catch (error) {
+        toast.error(error.message);
+       }
+    setLoading(false);
    }
    useEffect(()=>{
        getDashBoardData();
@@ -41,14 +62,21 @@ const DashBoard = () => {
                 </div>
            </div>
         </div>
-        <div className='space-y-3'>
-          <p className='mt-6 mb-4'>Recent Creations</p>
+        <p className='mt-6 mb-4'>Recent Creations</p>
+        {
+          !loading?(<div className='space-y-3'>
+          
           {
             creations.map((item)=>(
               <CreationItem key={item.id} item={item}/>
             ))
           }
-        </div>
+        </div>):(
+          <div className='h-full flex items-center justify-center relative bottom-40'>
+            <Loading />
+          </div>
+        )
+        }
     </div>
   )
 }

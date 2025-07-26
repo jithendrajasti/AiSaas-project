@@ -5,6 +5,7 @@ const { default: axios } = require('axios');
 const cloudinary = require('cloudinary');
 const pdf = require('pdf-parse/lib/pdf-parse.js');
 const fs = require('fs');
+const FormData = require('form-data');
 require('dotenv').config();
 
 const ai = new OpenAI({
@@ -177,20 +178,28 @@ const removeBackground = async (req, res) => {
             return res.json({ success: false, message: "This feature is only avaialble for premium subscriptions" });
         }
 
-        //to remove image background,we will do it using cloudinary
+        //to remove image background,we will do it using clipdrop api
        
-        const { secure_url } = await cloudinary.uploader.upload(image.path, {
-            transformation: [
-                {
-                    effect: 'background_removal',
-                    background_removal: 'remove_the_background'
-                }
-            ]
+        const formData=new FormData();
+        formData.append('image_file',fs.createReadStream(image.path));
+        
+        //send request to clipdrop api
+
+        const {data}=await axios.post('https://clipdrop-api.co/remove-background/v1',formData,{
+            headers:{
+                'x-api-key': process.env.CLIPDROP_API_KEY
+            },
+            responseType: "arraybuffer"
         });
         
-        const imageUrl = secure_url;
+        //converting binary buffer into base64 Image format
+        const base64Image = `data:image/png;base64,${Buffer.from(data, 'binary').toString('base64')}`;
 
-        
+        //uploading image to cloud
+
+        const { secure_url } = await cloudinary.uploader.upload(base64Image);
+
+        const imageUrl = secure_url;
 
         //store the image generated in database
 
@@ -212,7 +221,7 @@ const removeObject = async (req, res) => {
     try {
         const { userId } = req.auth();
         const { object } = req.body;
-        const { image } = req.file;
+        const  image  = req.file;
         const plan = req.plan;
         if (plan !== 'premium') {
             //this means that user is not having premium subscription & already freelu used more than 10 times
@@ -279,7 +288,7 @@ const reviewResume = async (req, res) => {
                 },
             ],
             temperature: 0.7,
-            max_tokens: 1000
+            max_tokens: 2000
         });
 
 

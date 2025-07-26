@@ -21,7 +21,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
   if (!user) return null;
 
   return (
-    <div className={`w-60 bg-white border-r border-gray-200 flex flex-col justify-between items-center max-sm:absolute top-14 bottom-0 ${sidebar ? 'translate-x-0' : 'max-sm:-translate-x-full'} transition-all duration-300 ease-in-out`}>
+    <div className={`w-60 bg-white border-r border-gray-200 flex flex-col justify-between items-center max-sm:absolute top-14 bottom-0 ${sidebar ? 'translate-x-0' : 'max-sm:-translate-x-full'} transition-all duration-300 ease-in-out z-10`}>
       <div className='my-7 w-full px-4'>
         <img src={user.imageUrl} alt="User avatar" className='w-16 h-16 rounded-full mx-auto' />
         <h1 className='mt-2 text-center font-medium text-gray-700'>{user.fullName}</h1>

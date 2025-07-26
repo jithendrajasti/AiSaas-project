@@ -16,7 +16,7 @@ const CreationItem = ({item}) => {
             expanded && (
                 <div>
                     {item.type === 'image' ? (<div>
-                        <img src={item.content} alt="" className='mt-3 w-full max-w-md'/>
+                        <img src={item.content} alt="" className='mt-3 w-full max-w-md rounded-xl'/>
                     </div>):(
                         <div className='mt-3 h-full overflow-y-scroll text-sm text-slate-700 '>
                              <div className='reset-tw'>
