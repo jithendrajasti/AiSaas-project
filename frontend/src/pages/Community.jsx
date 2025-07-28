@@ -67,7 +67,7 @@ const Community = () => {
                 <img
                   src={creation.content}
                   alt={creation.prompt}
-                  className='w-full h-64 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105'
+                  className='w-full aspect-[4/5] object-cover rounded-lg transition-transform duration-300 group-hover:scale-105'
                 />
                 <div className='absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4 flex-col gap-4'>
                   <p className='text-white text-center text-sm'>{creation.prompt}</p>
