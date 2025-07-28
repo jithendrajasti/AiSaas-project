@@ -54,7 +54,7 @@ const Community = () => {
      fetchCreations();
   },[user])
   return !loading ? (
-    <div className='flex-1 h-full flex flex-col gap-4 p-6 bg-gray-100'>
+    <div className='flex-1 flex flex-col gap-4 p-6 bg-gray-100'>
       <h2 className='text-2xl font-bold mb-4'>Creations</h2>
       {
         creations && (
