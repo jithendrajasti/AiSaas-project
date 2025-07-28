@@ -62,7 +62,7 @@ const Community = () => {
             {creations.map((creation, index) => (
               <div
                 key={index}
-                className='relative cursor-pointer rounded-lg overflow-hidden shadow-md group z-0'
+                className='relative cursor-pointer rounded-lg  shadow-md group z-0'
               >
                 <img
                   src={creation.content}
