@@ -58,11 +58,11 @@ const Community = () => {
       <h2 className='text-2xl font-bold mb-4'>Creations</h2>
       {
         creations && (
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-2 max-h-[75vh] overflow-y-auto'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-2 max-h-[75vh] overflow-y-scroll'>
             {creations.map((creation, index) => (
               <div
                 key={index}
-                className='relative cursor-pointer rounded-lg  shadow-md group z-0'
+                className='relative cursor-pointer rounded-lg overflow-hidden  shadow-md group z-0'
               >
                 <img
                   src={creation.content}
